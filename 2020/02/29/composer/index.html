@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="小鸣的PHP">
+    
+    
+    
+    
+    
+    
+    <title>composer的基本用法 | 小鸣的PHP</title>
+    <link href="http://yoursite.com" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                background: url('/imgs/xsbg.gif');
+                background-attachment: fixed;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section class="hidden-xs">
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="http://yoursite.com">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">小鸣的PHP</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="dropdown">
+                    <!-- TODO 添加hover dropdown效果 -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li>
+                            <a href="/categories/JavaScript/">JavaScript</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/Node-js/">Node.js</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/git/">git</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/php/">php</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/node/">node</a>
+                        </li>
+                        
+                        
+                        <li>
+                            <a href="/categories">...</a>
+                        </li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                
+                
+                <li class="dropdown">
+                    <!-- TODO 添加hover dropdown效果 -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li>
+                            <a href="/tags/%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">学习心得</a>
+                        </li>
+                        
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="http://yoursite.com">小鸣的PHP</a>
+        >
+        <span>composer的基本用法</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2020/02/29/composer/">composer的基本用法</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">学习心得</a>
+                
+            </span>
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2020-02-29
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2020/02/29/composer/">composer的基本用法</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2020-02-29
+            </p>
+            <p>
+                
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">学习心得</a>
+                
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <p><strong>composer类似于nodejs的npm</strong></p>
+<p><strong>在安装php的包之前  还需要检索在packagist资源库中检索一下包的存在 运行</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer search phpmailer</span><br></pre></td></tr></table></figure>
+
+<p><strong>检索结果如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">phpmailer/phpmailer PHPMailer is a full-featured email creation <span class="keyword">and</span> transfer <span class="class"><span class="keyword">class</span> <span class="title">for</span> <span class="title">PHPswiftmailer</span>/<span class="title">swiftmailer</span> <span class="title">Swiftmailer</span>, <span class="title">free</span> <span class="title">feature</span>-<span class="title">rich</span> <span class="title">PHP</span> <span class="title">mailer</span></span></span><br><span class="line"><span class="class"><span class="title">phpmailer</span>/<span class="title">phpmailer</span> <span class="title">PHPMailer</span> <span class="title">is</span> <span class="title">a</span> <span class="title">full</span>-<span class="title">featured</span> <span class="title">email</span> <span class="title">creation</span> <span class="title">and</span> <span class="title">transfer</span> <span class="title">class</span> <span class="title">for</span> <span class="title">PHPvernes</span>/<span class="title">yiimailer</span> <span class="title">Yii</span> <span class="title">extension</span> <span class="title">for</span> <span class="title">sending</span> <span class="title">emails</span> <span class="title">with</span> <span class="title">layouts</span> <span class="title">using</span> <span class="title">PHPMailer</span></span></span><br><span class="line"><span class="class"><span class="title">itinerisltd</span>/<span class="title">wp</span>-<span class="title">phpmailer</span> <span class="title">WP</span> <span class="title">PHPMailer</span> <span class="title">provides</span> <span class="title">a</span> <span class="title">clean</span> <span class="title">and</span> <span class="title">simple</span> <span class="title">way</span> <span class="title">to</span> <span class="title">configure</span> <span class="title">WordPress</span>-<span class="title">bundled</span> <span class="title">PHPMailer</span> <span class="title">library</span>, <span class="title">allowing</span> <span class="title">you</span> <span class="title">to</span> <span class="title">quickly</span> <span class="title">get</span> <span class="title">started</span> <span class="title">sending</span> <span class="title">mail</span> <span class="title">through</span> <span class="title">a</span> <span class="title">local</span> <span class="title">or</span> <span class="title">cloud</span> <span class="title">based</span> <span class="title">service</span> <span class="title">of</span> <span class="title">your</span> <span class="title">choice</span>.</span></span><br><span class="line"><span class="class"><span class="title">msp</span>/<span class="title">smtp</span> <span class="title">SMTP</span> <span class="title">with</span> <span class="title">PHPMailer</span></span></span><br><span class="line"><span class="class"><span class="title">zyx</span>/<span class="title">zyx</span>-<span class="title">phpmailer</span> <span class="title">PHPMailer</span> <span class="title">integration</span> <span class="title">for</span> <span class="title">Yii</span> 2 <span class="title">framework</span></span></span><br><span class="line"><span class="class"><span class="title">filips123</span>/<span class="title">monolog</span>-<span class="title">phpmailer</span> <span class="title">PHPMailer</span> <span class="title">handler</span> <span class="title">for</span> <span class="title">Monolog</span></span></span><br><span class="line"><span class="class"><span class="title">yurunsoft</span>/<span class="title">phpmailer</span>-<span class="title">swoole</span> <span class="title">PHPMailer</span> 支持 <span class="title">Swoole</span> 协程环境</span></span><br><span class="line"><span class="class"><span class="title">yuan1994</span>/<span class="title">tp</span>-<span class="title">mailer</span> <span class="title">A</span> <span class="title">powerful</span> <span class="title">and</span> <span class="title">beautiful</span> <span class="title">php</span> <span class="title">mailer</span> <span class="title">for</span> <span class="title">All</span> <span class="title">of</span> <span class="title">ThinkPHP</span> <span class="title">and</span> <span class="title">Other</span> <span class="title">PHP</span> <span class="title">Frameworks</span> <span class="title">based</span> <span class="title">SwiftMailer</span></span></span><br><span class="line"><span class="class"><span class="title">rmrevin</span>/<span class="title">yii2</span>-<span class="title">postman</span> <span class="title">Mail</span> <span class="title">module</span> <span class="title">for</span> <span class="title">Yii2</span>.</span></span><br><span class="line"><span class="class"><span class="title">locomotivemtl</span>/<span class="title">charcoal</span>-<span class="title">email</span> <span class="title">Email</span> <span class="title">sending</span> <span class="title">and</span> <span class="title">queueing</span> <span class="title">for</span> <span class="title">Charcoal</span></span></span><br><span class="line"><span class="class"><span class="title">dappur</span>/<span class="title">framework</span> <span class="title">A</span> <span class="title">stylish</span> <span class="title">PHP</span> <span class="title">application</span> <span class="title">framework</span> <span class="title">crafted</span> <span class="title">using</span> <span class="title">Slim</span>, <span class="title">Twig</span>, <span class="title">Eloquent</span> <span class="title">and</span> <span class="title">Sentinel</span> <span class="title">designed</span> <span class="title">to</span> <span class="title">get</span> <span class="title">you</span> <span class="title">from</span> <span class="title">clone</span> <span class="title">to</span> <span class="title">production</span> <span class="title">in</span> <span class="title">a</span> <span class="title">matter</span> <span class="title">of</span> <span class="title">minutes</span>.</span></span><br><span class="line">byjg/mailwrapper A lightweight wrapper for send mail. The interface is tottaly decoupled from the sender. The sender availables are: PHP Mailer, AWS SES Api, Mandril Api.</span><br><span class="line">phpmailerflamin/phpmailer PHPMailer Editado para menos arquivos</span><br></pre></td></tr></table></figure>
+
+<p><strong>我们可以发现有很多phpmailer的提供商</strong> </p>
+<p><strong>然后我们就可以执行安装啦 运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer require phpmailer&#x2F;phpmailer</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果出现如下结果说明安装成功</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Using version ^6.1 for phpmailer&#x2F;phpmailer</span><br><span class="line">.&#x2F;composer.json has been updated</span><br><span class="line">Loading composer repositories with package information</span><br><span class="line">phpmailer&#x2F;phpmailer suggests installing psr&#x2F;log (For optional PSR-3 debug logging)        </span><br><span class="line">phpmailer&#x2F;phpmailer suggests installing league&#x2F;oauth2-google (Needed for Google XOAUTH2 authentication)</span><br><span class="line">phpmailer&#x2F;phpmailer suggests installing hayageek&#x2F;oauth2-yahoo (Needed for Yahoo XOAUTH2 authentication)</span><br><span class="line">phpmailer&#x2F;phpmailer suggests installing stevenmaguire&#x2F;oauth2-microsoft (Needed for Microsoft XOAUTH2 authentication)</span><br><span class="line">phpmailer&#x2F;phpmailer suggests installing symfony&#x2F;polyfill-mbstring (To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2))</span><br><span class="line">Writing lock file</span><br><span class="line">Generating autoload files</span><br></pre></td></tr></table></figure>
+
+<p><strong>这里我们可以看到根目录下生成了许多文件  我们可以大概了解一下</strong></p>
+<p><strong><img src="/2020/02/29/composer/Snipaste_2020-02-29_11-39-57.png" alt></strong></p>
+<p><strong>通过自动加载文件我们就可以引入我们安装的包了 在根目录下新建一个index.php 我们可以在index文件引入一下   代码如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//引入自动加载文件</span></span><br><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/vendor/autoload.php'</span>;</span><br><span class="line"><span class="comment">// 实例化PHPmailer对象</span></span><br><span class="line">$mailer = <span class="keyword">new</span> \PHPMailer\PHPMailer\PHPMailer();</span><br><span class="line"><span class="comment">//打印看一下吧</span></span><br><span class="line">var_dump($mailer);</span><br></pre></td></tr></table></figure>
+
+<p><strong>部分输出如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">object(PHPMailer\PHPMailer\PHPMailer)#3 (74) &#123; [&quot;Priority&quot;]&#x3D;&gt; NULL [&quot;CharSet&quot;]&#x3D;&gt; string(10) &quot;iso-8859-1&quot; [&quot;ContentType&quot;]&#x3D;&gt; string(10) &quot;text&#x2F;plain&quot; [&quot;Encoding&quot;]&#x3D;&gt; string(4) &quot;8bit&quot; [&quot;ErrorInfo&quot;]&#x3D;&gt; string(0) &quot;&quot; [&quot;From&quot;]&#x3D;&gt; string(14) &quot;root@localhost&quot; [&quot;FromName&quot;]&#x3D;&gt; string(9) &quot;Root User&quot; [&quot;Sender&quot;]&#x3D;&gt; string(0) &quot;&quot; [&quot;Subject&quot;]&#x3D;&gt; string(0) &quot;&quot; [&quot;Body&quot;]&#x3D;&gt; string(0) &quot;&quot; [&quot;AltBody&quot;]&#x3D;&gt; string(0) &quot;&quot; [&quot;Ical&quot;]&#x3D;&gt; string(0) &quot;&quot; [&quot;MIMEBody&quot;:protected]&#x3D;&gt; string(0) &quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>composer.json 和 composer.lock 两个文件</strong> </p>
+<p><strong>composer.json的内容如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"require"</span>: &#123;</span><br><span class="line">        <span class="string">"phpmailer/phpmailer"</span>: <span class="string">"^6.1"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>可以看到require定义了要引入的包名和版本号  其中包含了命名包的机制</strong></p>
+<p><strong>如果我们引入了phpmailer/phpmailer包  发现还要一个包   xxx/phpmailer中的一个功能 就可以在require里面填入啦</strong></p>
+<p><strong>我们一般都需要安装的是稳定版 （stable） 开发版本为（dev）</strong>  </p>
+<p><strong>我们可以在composer.json中添加以下配置项</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"minimum-stability"</span>: <span class="string">"stable"</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>接下来我们就手动安装一个包吧 手动更新composer.json</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"require"</span>: &#123;</span><br><span class="line">        <span class="string">"phpmailer/phpmailer"</span>: <span class="string">"^6.1"</span>,</span><br><span class="line">        <span class="string">"phpoffice/phpspreadsheet"</span>: <span class="string">"^1.10"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"minimum-stability"</span>: <span class="string">"stable"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//然后后运行</span></span><br><span class="line">composer install</span><br></pre></td></tr></table></figure>
+
+<p><strong>就可以看到安装的过程啦！</strong></p>
+<p><strong>composer.lock  中说明的安装的具体的版本号  在提交项目的适合要把它和composer.json 一起提交上去哦！</strong></p>
+<p><strong>下面我们可以自己制作一个包  首先我们在github上面创建一个空仓库 命名为http   然后创建http文件夹   并下面初始化一个composer.json文件  运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer init</span><br></pre></td></tr></table></figure>
+
+<p><strong>如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">  Welcome to the Composer config generator  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This command will guide you through creating your composer.json config.</span><br><span class="line">&#x2F;&#x2F;填写供应商和包名  格式：供应商&#x2F;包名</span><br><span class="line">Package name (&lt;vendor&gt;&#x2F;&lt;name&gt;) [һ&#x2F;http]: wangyiming-666&#x2F;http</span><br><span class="line">&#x2F;&#x2F;包的描述  也可以不填</span><br><span class="line">Description []: curl http</span><br><span class="line">&#x2F;&#x2F;github的用户名和邮箱</span><br><span class="line">Author [wangyiming-666 &lt;2312892231@qq.com&gt;, n to skip]: wangyiming-666 &lt;2312892231@qq.com&gt;</span><br><span class="line">&#x2F;&#x2F;发布包的最低要求  dev可以和github同步  stable则需要打tag标签蔡锷可以发布</span><br><span class="line">Minimum Stability []: stable</span><br><span class="line">&#x2F;&#x2F;默认library即可</span><br><span class="line">Package Type (e.g. library, project, metapackage, composer-plugin) []: library</span><br><span class="line">&#x2F;&#x2F;授权类型可以不同</span><br><span class="line">License []: MIT</span><br><span class="line"></span><br><span class="line">Define your dependencies.</span><br><span class="line">是否定义当前依赖项</span><br><span class="line">Would you like to define your dependencies (require) interactively [yes]? y</span><br><span class="line">&#x2F;&#x2F;选择依赖包php</span><br><span class="line">Search for a package: php</span><br><span class="line">&#x2F;&#x2F;这里yes</span><br><span class="line">Would you like to define your dev dependencies (require-dev) interactively [yes]? y</span><br><span class="line">&#x2F;&#x2F;然后php</span><br><span class="line">Search for a package: php</span><br><span class="line">&#x2F;&#x2F;输入最低版本约束</span><br><span class="line">Enter the version constraint to require (or leave blank to use the latest version): &gt;&#x3D;5.3</span><br><span class="line">&#x2F;&#x2F;预览如下</span><br><span class="line">Search for a package: </span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;wangyiming-666&#x2F;http&quot;,</span><br><span class="line">    &quot;description&quot;: &quot;curl http&quot;,</span><br><span class="line">    &quot;type&quot;: &quot;library&quot;,</span><br><span class="line">    &quot;require-dev&quot;: &#123;</span><br><span class="line">        &quot;php&quot;: &quot;&gt;&#x3D;5.3&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;license&quot;: &quot;MIT&quot;,</span><br><span class="line">    &quot;authors&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;wangyiming-666&quot;,</span><br><span class="line">            &quot;email&quot;: &quot;2312892231@qq.com&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;minimum-stability&quot;: &quot;stable&quot;,</span><br><span class="line">    &quot;require&quot;: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;是否创建composer.json 选yes</span><br><span class="line">Do you confirm generation [yes]? y</span><br><span class="line">Would you like to install dependencies now [yes]? y</span><br><span class="line">Loading composer repositories with package information</span><br><span class="line">Updating dependencies (including require-dev)</span><br><span class="line">Nothing to install or update</span><br><span class="line">Writing lock file</span><br><span class="line">Generating autoload files</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后为了方便自动加载文件  我们在composer.json内还应该配置映射类库的命名空间的实际目录</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"autoload"</span>: &#123;</span><br><span class="line">     <span class="string">"psr-4"</span>: &#123;</span><br><span class="line">         <span class="string">"wangyiming\\http\\"</span>: <span class="string">"src/http/lib"</span></span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后我们在根目录下面创建路径为src/http/lib/Http.php的文件  代码如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">wangyiming</span>\<span class="title">http</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * HTTP 请求操作类</span></span><br><span class="line"><span class="comment"> * Class Http</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@package</span> xiaokeai\http</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Http</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * GET请求类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> bool|string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">requestByGet</span><span class="params">($url)</span></span>&#123;</span><br><span class="line">         <span class="keyword">return</span> file_get_contents($url);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后我们要建立与composer的关系，加入到自动加载机制（aotuload）中去</strong></p>
+<p><strong>运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer install</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">D:\phpStudy\WWW\http&gt;composer install </span><br><span class="line">Loading composer repositories with package information </span><br><span class="line">Updating dependencies (including require-dev) </span><br><span class="line">Nothing to install or update </span><br><span class="line">Writing lock file </span><br><span class="line">Generating autoload files</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后我们就可以看到在verndor/composer/autoload_psr4. php 文件中记录了$vendorDir 和 $baseDir 的路径。使用 Composer 安装类库依赖时， Packagist 会自动将自定义的项目文件 放到 vendor 目录下。</strong></p>
+<p><strong>可以看到文件内容如下了</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// autoload_psr4.php @generated by Composer</span></span><br><span class="line"></span><br><span class="line">$vendorDir = dirname(dirname(<span class="keyword">__FILE__</span>));</span><br><span class="line">$baseDir = dirname($vendorDir);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'wangyiming\\http\\'</span> =&gt; <span class="keyword">array</span>($baseDir . <span class="string">'/src/http/lib'</span>),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>我们可以在本地测试一下这个包</strong></p>
+<p><strong>在跟目录下创建index.php 代码如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/vendor/autoload.php'</span>;</span><br><span class="line">var_dump(strlen(wangyiming\http\Http::requestByGet(<span class="string">'http://baidu.com'</span>)));</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后在浏览器运行 会得到如下结束  说明运行成功</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int(81)</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后推送文章到github  这里不宅说明  可以看以前的文章  <a href="https://wangyiming-666.github.io/2020/02/27/git的简单使用/" target="_blank" rel="noopener">git的简单使用</a></strong></p>
+<p><strong>然后我们要拥有一个packagist账号并登录</strong></p>
+<p><strong>访问地址：<a href="https://packagist.org/register" target="_blank" rel="noopener">点这里</a> ， 实现注册和登录操作，不过也可以使用第三 方，如 GitHub 账号实现授权登录，简化注册流程。</strong> </p>
+<p><strong>提交包的 GitHub 仓库地址 访问地址：<a href="https://packagist.org/packages/submit" target="_blank" rel="noopener">点这里</a>， 在 Repository URL (Git/Svn/Hg）下方 的输入框中，填写 Git 地址后单击 Check 按钮</strong></p>
+<p><strong><img src="/2020/02/29/composer/Snipaste_2020-02-29_16-09-12.png" alt></strong></p>
+<p><strong><img src="/2020/02/29/composer/Snipaste_2020-02-29_16-10-21.png" alt></strong></p>
+<p><strong>然后就点submit就可以提交啦！</strong></p>
+<p><strong><img src="/2020/02/29/composer/Snipaste_2020-02-29_16-13-01.png" alt></strong></p>
+<p><strong>当 Composer 获取测试版本（dev）进行依赖包安装时， 会自动同步 GitHub 上最新的 代码，但稳定版（stable）的发布需要在 GitHub 上添加相应的标签（Tag）。下面简单讲 解操作步骤。</strong> </p>
+<p><strong>我们可以在本地创建一个tag 然后再推送上去  运行下面的命令创建tag</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.0.0 -m&#39;v1.0.0&#39;</span><br><span class="line">&#x2F;&#x2F;运行如下命名可以查看tag是否添加成功</span><br><span class="line">git tag</span><br><span class="line">&#x2F;&#x2F;执行结果如下</span><br><span class="line">v1.0.0</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后我们把tag推送 执行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git push http --tags</span><br><span class="line">&#x2F;&#x2F;执行结果如下</span><br><span class="line">Enumerating objects: 1, done.</span><br><span class="line">Counting objects: 100% (1&#x2F;1), done.</span><br><span class="line">Writing objects: 100% (1&#x2F;1), 158 bytes | 158.00 KiB&#x2F;s, done.</span><br><span class="line">Total 1 (delta 0), reused 0 (delta 0)</span><br><span class="line">To https:&#x2F;&#x2F;github.com&#x2F;wangyiming-666&#x2F;http.git</span><br><span class="line"> * [new tag]         v1.0.0 -&gt; v1.0.0</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后点击update  会发现版本已经更新</strong></p>
+<p><strong><img src="/2020/02/29/composer/Snipaste_2020-02-29_16-22-48.png" alt></strong></p>
+<p><strong><img src="/2020/02/29/composer/Snipaste_2020-02-29_16-23-01.png" alt></strong></p>
+<p><strong>现在我们测试一下自己的包 在一个新的文件夹下面运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">composer composer require wangyiming-666&#x2F;http</span><br><span class="line">&#x2F;&#x2F;出现下面结果说明已经正常安装了</span><br><span class="line">$ composer require wangyiming-666&#x2F;http</span><br><span class="line">Using version ^1.0 for wangyiming-666&#x2F;http</span><br><span class="line">.&#x2F;composer.json has been updated</span><br><span class="line">Loading composer repositories with package information</span><br><span class="line">Updating dependencies (including require-dev)</span><br><span class="line">Package operations: 1 install, 0 updates, 0 removals </span><br><span class="line">   - Installing wang] ialin&#x2F;http (vl.0 . 0) : Loading from cache Writing lock file </span><br><span class="line">   Generat工ng autoload files</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后我们根据测试的时候一样  再测试一遍就可以啦！</strong></p>
+
+    </div>
+</article>
+
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            小鸣的PHP
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"></p>
+        </div>
+    </div>
+</aside>
+    
+    <aside id="sidebar-recent_comments">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-comments"></i>
+            最新评论
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/22/v-if%E4%B8%8Ev-show%E7%9A%84%E5%8C%BA%E5%88%AB/">v-if与v-show的区别</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/20/node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%81%E8%AE%B8%E8%B7%A8%E5%9F%9F/">node服务器允许跨域</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/git%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">git提交文件</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/hello-world/">Hello World</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/ajax%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">ajax传文件的注意点</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/vue%E6%95%B0%E6%8D%AE%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A%E5%8E%9F%E7%90%86/">vue数据双向绑定原理</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/03/01/thinkphp%E5%B8%B8%E9%87%8F/">thinkphp常量</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/02/29/composer/">composer的基本用法</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/02/28/thinkphp/">thinkphp5命令行操作</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/02/28/Stream/">Node Stream</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/ajax%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">ajax传文件的注意点</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/02/28/Stream/">Node Stream</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/git%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">git提交文件</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/02/29/composer/">composer的基本用法</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/20/node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%81%E8%AE%B8%E8%B7%A8%E5%9F%9F/">node服务器允许跨域</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/hello-world/">Hello World</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/02/28/thinkphp/">thinkphp5命令行操作</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/19/vue%E6%95%B0%E6%8D%AE%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A%E5%8E%9F%E7%90%86/">vue数据双向绑定原理</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/03/01/thinkphp%E5%B8%B8%E9%87%8F/">thinkphp常量</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2020/10/22/v-if%E4%B8%8Ev-show%E7%9A%84%E5%8C%BA%E5%88%AB/">v-if与v-show的区别</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2020/02/29/composer/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2020/02/29/composer/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2020/02/29/composer/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+    <a href="/tags/%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/" style="font-size: 8.476538666515436px;" class="tag-cloud-link">学习心得</a>
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
+    </li>
+    
+    <li>
+        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
+    </li>
+    
+    <li>
+        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 小鸣的PHP Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+
+</html>
