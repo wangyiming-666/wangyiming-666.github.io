@@ -1,23 +1,148 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="小鸣的PHP"><meta name="renderer" content="webkit"><meta name="copyright" content="小鸣的PHP"><meta name="keywords" content="小鸣的PHP"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>thinkphp5命令行操作 · Mr.Long's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
 
-block content
-  article#post.article-entry
-    != page.content
-  // lincense
-  if(theme.copyright.enable === true && page.copyright !== false)
-    .license-wrapper
-      p 
-        span Author:  
-        a(href=config.url)= config.author
-      p 
-        span Link:  
-        a(href=page.permalink)= page.permalink
-      p 
-        span Copyright:  
-        span!= theme.copyright.license
-  include includes/partial/post-nav.pug
-  #comment
-    include includes/comment/livere.pug
-    include includes/comment/disqus.pug
-    include includes/comment/changyan.pug
-    include includes/comment/gitment.pug
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 4.2.1"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">longlongyu</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Long's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">thinkphp5命令行操作</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-02-28</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><p><strong>在引入tinkphp5的时候推荐使用Composer安装   执行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink&#x2F;think tp 5.0.* --prefer-dist</span><br></pre></td></tr></table></figure>
+
+<p><strong>cd到tp5目录下  运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行结果如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">Think Console version 0.1</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  command [options] [arguments]</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">  -h, --help            Display this help message</span><br><span class="line">  -V, --version         Display this console version</span><br><span class="line">  -q, --quiet           Do not output any message</span><br><span class="line">      --ansi            Force ANSI output</span><br><span class="line">      --no-ansi         Disable ANSI output</span><br><span class="line">  -n, --no-interaction  Do not ask any interactive question</span><br><span class="line">  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</span><br><span class="line"></span><br><span class="line">Available commands:</span><br><span class="line">  build              Build Application Dirs</span><br><span class="line">  clear              Clear runtime file</span><br><span class="line">  help               Displays help for a command</span><br><span class="line">  list               Lists commands</span><br><span class="line">  session            Clear Seesion file</span><br><span class="line"> make</span><br><span class="line">  make:controller    Create a new resource controller class</span><br><span class="line">  make:model         Create a new model class</span><br><span class="line"> optimize</span><br><span class="line">  optimize:autoload  Optimizes PSR0 and PSR4 packages to be loaded with classmaps too, good for production.</span><br><span class="line">  optimize:config    Build config and common file cache.</span><br><span class="line">  optimize:route     Build route cache.</span><br><span class="line">  optimize:schema    Build database schema cache.</span><br></pre></td></tr></table></figure>
+
+<p><strong>可以看到框架提供了很多操作命令  最基本的生成模块命令</strong></p>
+<p><strong>先把根目录下的bulid.php打开  里面提供的生成模块的示例命令</strong>  </p>
+<p><strong>我们在application目录下面也创建一个build.php，文件内容如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="comment">// 生成应用公共文件</span></span><br><span class="line">    <span class="string">'__file__'</span> =&gt; [<span class="string">'common.php'</span>, <span class="string">'config.php'</span>, <span class="string">'database.php'</span>],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义demo模块的自动生成 （按照实际定义的文件名生成）</span></span><br><span class="line">    <span class="string">'demo'</span>     =&gt; [</span><br><span class="line">        <span class="string">'__file__'</span>   =&gt; [<span class="string">'common.php'</span>],</span><br><span class="line">        <span class="string">'__dir__'</span>    =&gt; [<span class="string">'behavior'</span>, <span class="string">'controller'</span>, <span class="string">'model'</span>, <span class="string">'view'</span>],</span><br><span class="line">        <span class="string">'controller'</span> =&gt; [<span class="string">'Index'</span>, <span class="string">'Test'</span>, <span class="string">'UserType'</span>],</span><br><span class="line">        <span class="string">'model'</span>      =&gt; [<span class="string">'User'</span>, <span class="string">'UserType'</span>],</span><br><span class="line">        <span class="string">'view'</span>       =&gt; [<span class="string">'index/index'</span>],</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 其他更多的模块定义</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后运行</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think bulid</span><br></pre></td></tr></table></figure>
+
+<p><strong>可以看到在application目录下面demo模块已经自动完成</strong></p>
+<p><strong>下面是生成控制器和模型文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php think make:controller demo&#x2F;Order  &#x2F;&#x2F;生成控制器</span><br><span class="line">php think make:model demo&#x2F;Order  &#x2F;&#x2F;生成模型</span><br></pre></td></tr></table></figure>
+
+<p><strong>生成控制器的时候  默认是资源控制器 自带初始化方法  这里我们也可以创建一个空的控制器 运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think make:controller demo&#x2F;Order --plain</span><br></pre></td></tr></table></figure>
+
+<p><strong>下面讲一下如何扩展命令行的功能</strong></p>
+<p><strong>在application下创建一个command目录  里面新增一个Session.php文件</strong></p>
+<p><strong>然后里面的代码如下</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">command</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Command</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Input</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">input</span>\<span class="title">Option</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">console</span>\<span class="title">Output</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Session</span> <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">configure</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//   设置命令名字和额外选项和描述信息</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;setName(<span class="string">'session'</span>)</span><br><span class="line">        -&gt;addOption(<span class="string">'clear'</span>,<span class="string">'d'</span>,Option::VALUE_NONE,<span class="string">'clear all session'</span>,<span class="keyword">null</span>)</span><br><span class="line">    -&gt;setDescription(<span class="string">'Clear Seesion file'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//   指令操作</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">(Input $input, Output $output)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//   获取指令选项名称</span></span><br><span class="line">        $path = $input-&gt;getOption(<span class="string">'clear'</span>);</span><br><span class="line">        <span class="keyword">if</span>($path)&#123;</span><br><span class="line">          <span class="keyword">unset</span>($_SESSION);</span><br><span class="line">          $output-&gt;writeln(<span class="string">"Clear Session Successed"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">          $output-&gt;writeln(<span class="string">"Clear Nothing"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>configure方法定义了命令的 名称，选项，功能描述</strong></p>
+<p><strong>可以看出  这里的setName定义了这个指令的名字</strong></p>
+<p><strong>addOption定义了这个指令的其他选项   其中的：</strong></p>
+<p><strong>clear 是选项的名字</strong> </p>
+<p><strong>d 对应是别名</strong></p>
+<p><strong>Option对应选项的类型</strong></p>
+<p> <strong>值对应没有输入值 CVALUE_NONE） 、输入值必须 CVALUE _REQUIRED）、输入值可选（VALUE_OPTIONAL）和数组输入值（VALUE IS ARRAY) 4 种。</strong> </p>
+<p><strong>‘clear all session’对应选项的的说明</strong></p>
+<p><strong>null：默认值，没有的话就默认为null</strong></p>
+<p><strong>execute 方法定义了具体功能</strong></p>
+<p><strong>然后在application目录下面的command.php(没有的话需要创建) 添加下面的代码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">  <span class="string">'app\command\Session'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后运行php think 看一下是否注册成功 出现如下说明成功了</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Available commands:</span><br><span class="line">  build              Build Application Dirs</span><br><span class="line">  clear              Clear runtime file</span><br><span class="line">  help               Displays help for a command</span><br><span class="line">  list               Lists commands</span><br><span class="line">  session            Clear Seesion file</span><br></pre></td></tr></table></figure>
+
+<p><strong>然后我们可以测试一下 运行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">php think session --clear</span><br><span class="line">&#x2F;&#x2F;结果为</span><br><span class="line">Clear Session Successed</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;也可以使用别名</span><br><span class="line">php think session --d</span><br><span class="line">&#x2F;&#x2F;结果为</span><br><span class="line">Clear Session Successed</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;如果输入指令无</span><br><span class="line">php think session</span><br><span class="line">&#x2F;&#x2F;结果为</span><br><span class="line">Clear Nothing</span><br></pre></td></tr></table></figure>
+
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://yoursite.com">小鸣的PHP</a></p><p> <span>Link:  </span><a href="http://yoursite.com/2020/02/28/thinkphp/">http://yoursite.com/2020/02/28/thinkphp/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/3.0" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/02/29/composer/" title="composer的基本用法"><span>< PreviousPost</span><br><span class="prevTitle">composer的基本用法</span></a><a class="nextSlogan" href="/2020/02/28/Stream/" title="Node Stream"><span>NextPost ></span><br><span class="nextTitle">Node Stream</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span> | theme </span><a href="https://github.com/Longlongyu/hexo-theme-Cxo" target="_blank" rel="noopener"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

@@ -1,9 +1,153 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="小鸣的PHP"><meta name="renderer" content="webkit"><meta name="copyright" content="小鸣的PHP"><meta name="keywords" content="小鸣的PHP"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Mr.Long's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
 
-block content
-  include includes/recent-posts.pug
-  include includes/partial/page-nav.pug
-    
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
 
 
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 4.2.1"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">longlongyu</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Long's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>Mr.Long's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-github" href="//github.com/" target="_blank" title="github"></a><a class="fa fa-weibo" href="//www.weibo.com" target="_blank" title="weibo"></a><a class="fa fa-facebook" href="//www.facebook.com" target="_blank" title="facebook"></a><a class="fa fa-twitter" href="//twitter.com" target="_blank" title="twitter"></a><a class="fa fa-rss" href="/atom.xml" target="_blank" title="rss"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2020/10/30/%E8%A7%A3%E5%86%B3vue%E8%B7%AF%E7%94%B1%E9%87%8D%E5%A4%8D%E8%B7%B3%E8%BD%AC%E6%8A%A5%E9%94%99/">解决vue路由重复跳转报错</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-30T03:00:02.000Z">2020-10-30</time></div><div class="recent-post-content">在页面中
+</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/10/30/%E8%A7%A3%E5%86%B3vue%E8%B7%AF%E7%94%B1%E9%87%8D%E5%A4%8D%E8%B7%B3%E8%BD%AC%E6%8A%A5%E9%94%99/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/10/22/v-if%E4%B8%8Ev-show%E7%9A%84%E5%8C%BA%E5%88%AB/">v-if与v-show的区别</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-22T02:47:44.000Z">2020-10-22</time></div><div class="recent-post-content">123&lt;h1 v-if='isShow'&gt;我是h1 v-if&lt;/h1&gt;&lt;h1 v-show='isShow'&gt;我是h1 v-show&lt;/h1&gt;
 
+异同点
+1234567891011121314151617v-if 和 v-show 的异同点1. 相同点 : 可以切换元素的显示与隐藏2. 不同点 : 切换显示和隐藏的实现不同    v-if :  显示:创建节点  隐藏: 删除节点    v-show : 显示: display:block  隐藏 : display:none3. 使用场景 :    v-if因为要不断的创建和删除来切换显示与隐藏 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/10/22/v-if%E4%B8%8Ev-show%E7%9A%84%E5%8C%BA%E5%88%AB/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/10/20/node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%81%E8%AE%B8%E8%B7%A8%E5%9F%9F/">node服务器允许跨域</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-20T05:59:41.000Z">2020-10-20</time></div><div class="recent-post-content">请求node服务器时console控制台出现如下错误
+
+
+需要向请求头部写入允许跨域
+1234567891011const http = require('http')const server = http.createServer()server.on('request',(req,res)=&gt;&#123;    res.writeHead(200, &#123;        'Content-type': `text/plain;charset=utf-8`,        "Access-Control-Allow-Origin": "http://127.0.0.1:5500" ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/10/20/node%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%81%E8%AE%B8%E8%B7%A8%E5%9F%9F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/10/19/git%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">git提交文件</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-19T14:01:48.558Z">2020-10-19</time></div><div class="recent-post-content">在学习git的过程中我觉得还是有很多知识点需要整理的首先我们要在项目的文件夹下面初始化一个 本地仓库 运行命令
+1git init
+
+ 可以看到  在我们的文件夹下面生成了一个.git文件  这个文件夹是在window看不到的  需要打开隐藏文件才可以看到  这里不建议去动这个文件
+然后我们在文件夹下面建一个index.php文件 并添加点内容
+12&lt;?phpecho "现在的时间是:".date('Y-m-d H:i:s');
+
+然后我们把他提交到我们的版本库 运行
+1git add index.php
+
+这里有时候在提交某些文件的时候  会出现一些提示  git使用了liunx下的换 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/10/19/git%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/10/19/hello-world/">Hello World</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-19T13:42:41.959Z">2020-10-19</time></div><div class="recent-post-content">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Quick StartCreate a new post1$ hexo new "My New Post"
+
+More info: Writing
+Run server1$ hexo server
+
+More  ...</div><div class="read-more"><a class="more" href="/2020/10/19/hello-world/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/10/19/ajax%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">ajax传文件的注意点</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-19T06:14:49.000Z">2020-10-19</time></div><div class="recent-post-content">1、在ajax表单传文件html注意点123456&lt;form action="http://localhost:8080" method="post" enctype="multipart/form-data"&gt;		&lt;input type="text" id="username" name="username" value="" /&gt;&lt;br&gt;		&lt;input type="text" id="password" name="password" value="" /&gt;&lt;br&gt;		&lt;input type="file" name=""  ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/10/19/ajax%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/10/19/vue%E6%95%B0%E6%8D%AE%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A%E5%8E%9F%E7%90%86/">vue数据双向绑定原理</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-10-19T06:01:42.000Z">2020-10-19</time></div><div class="recent-post-content">1、Object.defineProperty()方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。
+1&lt;input type="text" id="ipt"&gt;
+
+12345678910111213141516let obj = &#123;&#125;       let temp       let ipt = document.querySelector('#ipt')       ipt.oninput = function () &#123;           obj.name = this.value       &#125;       ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/10/19/vue%E6%95%B0%E6%8D%AE%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A%E5%8E%9F%E7%90%86/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/03/01/thinkphp%E5%B8%B8%E9%87%8F/">thinkphp常量</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-03-01T03:07:35.000Z">2020-03-01</time></div><div class="recent-post-content">1、加载静态资源的路径ROOT：项目目录
+STATIC ：项目目录下的static目录
+JS ：项目目录下的static/js目录
+CSS：项目目录下的static/css目录
+我们可以用view模板打印这些常量的具体路径
+
+输出效果如下
+
+打开application文件夹下的config文件，可根据你自己需要自定义资源常量，定义好后常量就可以在模板文件中使用常量了。
+例如：
+
+2、预定义常量预定义常量是指系统内置定义好的常量，不会随着环境的变化而变化，包括：
+EXT 类库文件后缀（.php）
+THINK_VERSION 框架版本号
+3、路径常量系统和应用的路径常量用于系统默认的目录规范，可以 ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/03/01/thinkphp%E5%B8%B8%E9%87%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/02/29/composer/">composer的基本用法</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-02-29T03:14:46.000Z">2020-02-29</time></div><div class="recent-post-content">composer类似于nodejs的npm
+在安装php的包之前  还需要检索在packagist资源库中检索一下包的存在 运行
+1composer search phpmailer
+
+检索结果如下
+12345678910111213phpmailer/phpmailer PHPMailer is a full-featured email creation and transfer class for PHPswiftmailer/swiftmailer Swiftmailer, free feature-rich PHP mailerphpmailer/phpmailer PHPMaile ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/02/29/composer/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2020/02/28/thinkphp/">thinkphp5命令行操作</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2020-02-28T06:22:05.000Z">2020-02-28</time></div><div class="recent-post-content">在引入tinkphp5的时候推荐使用Composer安装   执行
+1composer create-project topthink&#x2F;think tp 5.0.* --prefer-dist
+
+cd到tp5目录下  运行
+1php think
+
+执行结果如下
+12345678910111213141516171819202122232425262728Think Console version 0.1Usage:  command [options] [arguments]Options:  -h, --help            Display this help messa ...</div><div class="recent-post-tags"><a class="post-tag fa fa-tag" href="javascript:void(0)" date-tags="学习心得"> 学习心得</a></div><div class="read-more"><a class="more" href="/2020/02/28/thinkphp/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &amp;#62;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span> | theme </span><a href="https://github.com/Longlongyu/hexo-theme-Cxo" target="_blank" rel="noopener"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
