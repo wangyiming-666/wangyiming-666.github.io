@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="小鸣的PHP"><meta name="renderer" content="webkit"><meta name="copyright" content="小鸣的PHP"><meta name="keywords" content="小鸣的PHP"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>透视http协议 · Mr.Wang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 4.2.1"></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">WYMing</div><div class="profile-signature">for me</div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a>Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">主页</a><a href="/archives/">归档</a><a href="/tags/">标签</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">主页</a><a href="/archives/">归档</a><a href="/tags/">标签</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">透视http协议</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2021-01-28</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="http"> http</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h4 id="http协议来龙去脉"><a href="#http协议来龙去脉" class="headerlink" title="http协议来龙去脉"></a>http协议来龙去脉</h4><p>1、HTTP 协议始于三十年前蒂姆·伯纳斯 - 李的一篇论文；<br>2、HTTP/0.9 是个简单的文本协议，只能获取文本资源；<br>3、HTTP/1.0 确立了大部分现在使用的技术，但它不是正式标准；<br>4、HTTP/1.1 是目前互联网上使用最广泛的协议，功能也非常完善；<br>5、HTTP/2 基于 Google 的 SPDY 协议，注重性能改善，但还未普及；<br>6、HTTP/3 基于 Google 的 QUIC 协议，是将来的发展方向。</p>
+<h4 id="http是什么"><a href="#http是什么" class="headerlink" title="http是什么"></a>http是什么</h4><p>“HTTP 是一个在计算机世界里专门在两点之间传输文字、图片、音频、视频等超文本数据的约定和规范</p>
+<h4 id="http不是孤军奋战"><a href="#http不是孤军奋战" class="headerlink" title="http不是孤军奋战"></a>http不是孤军奋战</h4><p>在互联网世界里，HTTP 通常跑在 TCP/IP 协议栈之上，依靠 IP 协议实现寻址和路由、TCP 协议实现可靠数据传输、DNS 协议实现域名查找、SSL/TLS 协议实现安全通信。此外，还有一些协议依赖于 HTTP，例如 WebSocket、HTTPDNS 等。这些协议相互交织，构成了一个协议网，而 HTTP 则处于中心地位。</p>
+<h4 id="Ip协议"><a href="#Ip协议" class="headerlink" title="Ip协议"></a>Ip协议</h4><p>IP 协议是“Internet Protocol”的缩写，主要目的是解决寻址和路由问题，以及如何在两点间传送数据包。IP 协议使用“IP 地址”的概念来定位互联网上的每一台计算机。可以对比一下现实中的电话系统，你拿着的手机相当于互联网上的计算机，而要打电话就必须接入电话网，由通信公司给你分配一个号码，这个号码就相当于 IP 地址。</p>
+<h4 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h4><p>TCP 协议是“Transmission Control Protocol”的缩写，意思是“传输控制协议”，它位于 IP 协议之上，基于 IP 协议提供可靠的、字节流形式的通信，是 HTTP 协议得以实现的基础。</p>
+<h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><p>于是“域名系统”（Domain Name System）出现了，用有意义的名字来作为 IP 地址的等价替代。设想一下，你是愿意记“95.211.80.227”这样枯燥的数字，还是“nginx.org”这样的词组呢？</p>
+<p>例如，你要访问“<a href="http://www.apple.com”，就要进行下面的三次查询：">www.apple.com”，就要进行下面的三次查询：</a></p>
+<p>1、访问根域名服务器，它会告诉你“com”顶级域名服务器的地址；</p>
+<p>2、访问“com”顶级域名服务器，它再告诉你“apple.com”域名服务器的地址；</p>
+<p>3、最后访问“apple.com”域名服务器，就得到了“<a href="http://www.apple.com”的地址。" target="_blank" rel="noopener">www.apple.com”的地址。</a> </p>
+<p>1、域名使用字符串来代替 IP 地址，方便用户记忆，本质上一个名字空间系统；</p>
+<p>2、DNS 就像是我们现实世界里的电话本、查号台，统管着互联网世界里的所有网站，是一个“超级大管家”；</p>
+<p>3、DNS 是一个树状的分布式查询系统，但为了提高查询效率，外围有多级的缓存；</p>
+<p>4、使用 DNS 可以实现基于域名的负载均衡，既可以在内网，也可以在外网。课下作业 </p>
+<h4 id="URI-URL"><a href="#URI-URL" class="headerlink" title="URI/URL"></a>URI/URL</h4><p>所以就出现了 URI（Uniform Resource Identifier），中文名称是 统一资源标识符，使用它就能够唯一地标记互联网上资源。</p>
+<h4 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h4><p>代理（Proxy）是 HTTP 协议中请求方和应答方中间的一个环节，作为“中转站”，既可以转发客户端的请求，也可以转发服务器的应答。代理有很多的种类，常见的有：<br>匿名代理：完全“隐匿”了被代理的机器，外界看到的只是代理服务器；<br>透明代理：顾名思义，它在传输过程中是“透明开放”的，外界既知道代理，也知道客户端；<br>正向代理：靠近客户端，代表客户端向服务器发送请求；<br>反向代理：靠近服务器端，代表服务器响应客户端的请求；</p>
+<p>由于代理在传输过程中插入了一个“中间层”，所以可以在这个环节做很多有意思的事情，比如：负载均衡：把访问请求均匀分散到多台机器，实现访问集群化；内容缓存：暂存上下行的数据，减轻后端的压力；安全防护：隐匿 IP, 使用 WAF 等工具抵御网络攻击，保护被代理的机器；数据处理：提供压缩、加密等额外的功能。</p>
+<h4 id="TCP-IP网络分层模型"><a href="#TCP-IP网络分层模型" class="headerlink" title="TCP/IP网络分层模型"></a>TCP/IP网络分层模型</h4><img src="/2021/01/28/%E9%80%8F%E8%A7%86http%E5%8D%8F%E8%AE%AE/2.png" class title="This is an example image">
+
+<p> TCP/IP 协议总共有四层，就像搭积木一样，每一层需要下层的支撑，同时又支撑着上层，任何一层被抽掉都可能会导致整个协议栈坍塌。 </p>
+<p> 第一层叫“链接层”（link layer），负责在以太网、WiFi 这样的底层网络上发送原始数据包，工作在网卡这个层次，使用 MAC 地址来标记网络上的设备，所以有时候也叫 MAC 层。 </p>
+<p> 第二层叫“网际层”或者“网络互连层”（internet layer），IP 协议就处在这一层。因为 IP 协议定义了“IP 地址”的概念，所以就可以在“链接层”的基础上，用 IP 地址取代 MAC 地址，把许许多多的局域网、广域网连接成一个虚拟的巨大网络，在这个网络里找设备时只要把 IP 地址再“翻译”成 MAC 地址就可以了。 </p>
+<p>第三层叫“传输层”（transport layer），这个层次协议的职责是保证数据在 IP 地址标记的两点之间“可靠”地传输，是 TCP 协议工作的层次，另外还有它的一个“小伙伴”UDP。 </p>
+<p> TCP 是一个有状态的协议，需要先与对方建立连接然后才能发送数据，而且保证数据不丢失不重复。而 UDP 则比较简单，它无状态，不用事先建立连接就可以任意发送数据，但不保证数据一定会发到对方。两个协议的另一个重要区别在于数据的形式。TCP 的数据是连续的“字节流”，有先后顺序，而 UDP 则是分散的小数据包，是顺序发，乱序收。 </p>
+<p> 协议栈的第四层叫“应用层”（application layer），由于下面的三层把基础打得非常好，所以在这一层就“百花齐放”了，有各种面向具体应用的协议。例如 Telnet、SSH、FTP、SMTP 等等，当然还有我们的 HTTP。MAC 层的传输单位是帧（frame），IP 层的传输单位是包（packet），TCP 层的传输单位是段（segment），HTTP 的传输单位则是消息或报文（message）。但这些名词并没有什么本质的区分，可以统称为数据包。 </p>
+<h4 id="TCP-IP-协议栈的工作方式"><a href="#TCP-IP-协议栈的工作方式" class="headerlink" title="TCP/IP 协议栈的工作方式"></a>TCP/IP 协议栈的工作方式</h4><img src="/2021/01/28/%E9%80%8F%E8%A7%86http%E5%8D%8F%E8%AE%AE/70bc19acacf2245fa841349f15cb7a6f.png" class title="This is an example image">
+
+
+
+<h4 id="简单的浏览器-HTTP-请求过程："><a href="#简单的浏览器-HTTP-请求过程：" class="headerlink" title="简单的浏览器 HTTP 请求过程："></a>简单的浏览器 HTTP 请求过程：</h4><img src="/2021/01/28/%E9%80%8F%E8%A7%86http%E5%8D%8F%E8%AE%AE/8a5bddd3d8046daf7032c7d60a3d1a19.png" class title="This is an example image">
+
+
+<p>1、浏览器从地址栏的输入中获得服务器的 IP 地址和端口号；</p>
+<p>2、浏览器用 TCP 的三次握手与服务器建立连接；</p>
+<p>3、浏览器向服务器发送拼好的报文；</p>
+<p>4、服务器收到报文后处理请求，同样拼好报文再发给浏览器；</p>
+<p>5、浏览器解析报文，渲染输出页面。 </p>
+<h4 id="http的特点"><a href="#http的特点" class="headerlink" title="http的特点"></a>http的特点</h4><p>1、HTTP 是灵活可扩展的，可以任意添加头字段实现任意功能；</p>
+<p>2、HTTP 是可靠传输协议，基于 TCP/IP 协议“尽量”保证数据的送达；</p>
+<p>3、HTTP 是应用层协议，比 FTP、SSH 等更通用功能更多，能够传输任意数据；</p>
+<p>4、HTTP 使用了请求 - 应答模式，客户端主动发起请求，服务器被动回复请求；</p>
+<p>5、HTTP 本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息。 </p>
+<h4 id="http的优缺点"><a href="#http的优缺点" class="headerlink" title="http的优缺点"></a>http的优缺点</h4><p>1、HTTP 最大的优点是简单、灵活和易于扩展；</p>
+<p>2、HTTP 拥有成熟的软硬件环境，应用的非常广泛，是互联网的基础设施；</p>
+<p>3、HTTP 是无状态的，可以轻松实现集群化，扩展性能，但有时也需要用 Cookie 技术来实现“有状态”；</p>
+<p>4、HTTP 是明文传输，数据完全肉眼可见，能够方便地研究分析，但也容易被窃听；</p>
+<p>5、HTTP 是不安全的，无法验证通信双方的身份，也不能判断报文是否被窜改；</p>
+<p>6、HTTP 的性能不算差，但不完全适应现在的互联网，还有很大的提升空间。 </p>
+<h4 id="HTTP-里的数据类型和语言类型"><a href="#HTTP-里的数据类型和语言类型" class="headerlink" title="HTTP 里的数据类型和语言类型"></a>HTTP 里的数据类型和语言类型</h4><p>1、数据类型表示实体数据的内容是什么，使用的是 MIME type，相关的头字段是 Accept 和 Content-Type；</p>
+<p>2、数据编码表示实体数据的压缩方式，相关的头字段是 Accept-Encoding 和 Content-Encoding；</p>
+<p>3、语言类型表示实体数据的自然语言，相关的头字段是 Accept-Language 和 Content-Language；</p>
+<p>4、字符集表示实体数据的编码方式，相关的头字段是 Accept-Charset 和 Content-Type；</p>
+<p>5、客户端需要在请求头里使用 Accept 等头字段与服务器进行“内容协商”，要求服务器返回最合适的数据；</p>
+<p>6、Accept 等头字段可以用“,”顺序列出多个可能的选项，还可以用“;q=”参数来精确指定权重。 </p>
+<h4 id="如何处理大文件"><a href="#如何处理大文件" class="headerlink" title="如何处理大文件"></a>如何处理大文件</h4><p>1、压缩 HTML 等文本文件是传输大文件最基本的方法；</p>
+<p>2、分块传输可以流式收发数据，节约内存和带宽，使用响应头字段“Transfer-Encoding: chunked”来表示，分块的格式是 16 进制长度头 + 数据块；</p>
+<p>3、范围请求可以只获取部分数据，即“分块请求”，实现视频拖拽或者断点续传，使用请求头字段“Range”和响应头字段“Content-Range”，响应状态码必须是 206；</p>
+<p>4、也可以一次请求多个范围，这时候响应报文的数据类型是“multipart/byteranges”，body 里的多个部分会用 boundary 字符串分隔。 </p>
+<h4 id="HTTP-协议里的短连接和长连接"><a href="#HTTP-协议里的短连接和长连接" class="headerlink" title="HTTP 协议里的短连接和长连接"></a>HTTP 协议里的短连接和长连接</h4><p>1、早期的 HTTP 协议使用短连接，收到响应后就立即关闭连接，效率很低；</p>
+<p>2、HTTP/1.1 默认启用长连接，在一个连接上收发多个请求响应，提高了传输效率；</p>
+<p>3、服务器会发送“Connection: keep-alive”字段表示启用了长连接；</p>
+<p>4、报文头里如果有“Connection: close”就意味着长连接即将关闭；</p>
+<p>5、过多的长连接会占用服务器资源，所以服务器会用一些策略有选择地关闭长连接；“</p>
+<p>6、队头阻塞”问题会导致性能下降，可以用“并发连接”和“域名分片”技术缓解。 </p>
+<h4 id="https的握手"><a href="#https的握手" class="headerlink" title="https的握手"></a>https的握手</h4><p>ts1.2</p>
+<img src="/2021/01/28/%E9%80%8F%E8%A7%86http%E5%8D%8F%E8%AE%AE/9caba6d4b527052bbe7168ed4013011e.png" class>
+
+<p>ts1.3</p>
+<img src="/2021/01/28/%E9%80%8F%E8%A7%86http%E5%8D%8F%E8%AE%AE/7a2bc39fdbb421cf72a01e887e9156db.png" class>
+
+
+<h4 id="http2的新特性"><a href="#http2的新特性" class="headerlink" title="http2的新特性"></a>http2的新特性</h4><p>HTTP/2 把“头部压缩”作为性能改进的一个重点，优化的方式你也肯定能想到，还是“压缩”。</p>
+<p>不过 HTTP/2 并没有使用传统的压缩算法，而是开发了专门的“HPACK”算法，在客户端和服务器两端建立“字典”，用索引号表示重复的字符串，还釆用哈夫曼编码来压缩整数和字符串，可以达到 50%~90% 的高压缩率。 </p>
+<p>把 TCP 协议的部分特性挪到了应用层，把原来的“Header+Body”的消息“打散”为数个小片的二进制“帧”（Frame），用“HEADERS”帧存放头数据、“DATA”帧存放实体数据。这种做法有点像是“Chunked”分块编码的方式（参见第 16 讲），也是“化整为零”的思路，但 HTTP/2 数据分帧后“Header+Body”的报文结构就完全消失了，协议看到的只是一个个的“碎片”。 </p>
+<img src="/2021/01/28/%E9%80%8F%E8%A7%86http%E5%8D%8F%E8%AE%AE/83c9f0ecad361ba8ef8f3b73d6872f1a.png" class>
+
+<p>1、 HTTP 协议取消了小版本号，所以 HTTP/2 的正式名字不是 2.0；</p>
+<p>2、HTTP/2 在“语义”上兼容 HTTP/1，保留了请求方法、URI 等传统概念；</p>
+<p>3、HTTP/2 使用“HPACK”算法压缩头部信息，消除冗余数据节约带宽；</p>
+<p>4、HTTP/2 的消息不再是“Header+Body”的形式，而是分散为多个二进制“帧”；</p>
+<p>5、HTTP/2 使用虚拟的“流”传输消息，解决了困扰多年的“队头阻塞”问题，同时实现了“多路复用”，提高连接的利用率；</p>
+<p>6、HTTP/2 也增强了安全性，要求至少是 TLS1.2，而且禁用了很多不安全的密码套件。 </p>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2020/11/25/vue%E7%9B%91%E5%90%ACobject%E5%8F%98%E5%8C%96/" title="vue监听object变化"><span>NextPost ></span><br><span class="nextTitle">vue监听object变化</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span> | theme </span><a href="https://github.com/Longlongyu/hexo-theme-Cxo" target="_blank" rel="noopener"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#http协议来龙去脉"><span class="toc-number">1.</span> <span class="toc-text">http协议来龙去脉</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http是什么"><span class="toc-number">2.</span> <span class="toc-text">http是什么</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http不是孤军奋战"><span class="toc-number">3.</span> <span class="toc-text">http不是孤军奋战</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ip协议"><span class="toc-number">4.</span> <span class="toc-text">Ip协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP协议"><span class="toc-number">5.</span> <span class="toc-text">TCP协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DNS"><span class="toc-number">6.</span> <span class="toc-text">DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#URI-URL"><span class="toc-number">7.</span> <span class="toc-text">URI&#x2F;URL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代理"><span class="toc-number">8.</span> <span class="toc-text">代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP-IP网络分层模型"><span class="toc-number">9.</span> <span class="toc-text">TCP&#x2F;IP网络分层模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP-IP-协议栈的工作方式"><span class="toc-number">10.</span> <span class="toc-text">TCP&#x2F;IP 协议栈的工作方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简单的浏览器-HTTP-请求过程："><span class="toc-number">11.</span> <span class="toc-text">简单的浏览器 HTTP 请求过程：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http的特点"><span class="toc-number">12.</span> <span class="toc-text">http的特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http的优缺点"><span class="toc-number">13.</span> <span class="toc-text">http的优缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-里的数据类型和语言类型"><span class="toc-number">14.</span> <span class="toc-text">HTTP 里的数据类型和语言类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如何处理大文件"><span class="toc-number">15.</span> <span class="toc-text">如何处理大文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-协议里的短连接和长连接"><span class="toc-number">16.</span> <span class="toc-text">HTTP 协议里的短连接和长连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#https的握手"><span class="toc-number">17.</span> <span class="toc-text">https的握手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http2的新特性"><span class="toc-number">18.</span> <span class="toc-text">http2的新特性</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
